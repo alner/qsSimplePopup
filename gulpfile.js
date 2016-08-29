@@ -4,39 +4,40 @@ var gulpIgnore = require('gulp-ignore');
 var less = require('gulp-less');
 var del = require('del');
 var zip = require('gulp-zip');
-var minifyCSS = require('gulp-minify-css');
+var minifyCSS = require('gulp-clean-css');
+var LessPluginAutoPrefix = require('less-plugin-autoprefix');
+var autoprefix= new LessPluginAutoPrefix({ browsers: ["last 2 versions"] });
 var runSequence = require('run-sequence');
 var rename = require('gulp-rename');
 var watch = require('gulp-watch');
+//var copy = require('gulp-copy');
 var path = require('path');
-var LessPluginAutoPrefix = require('less-plugin-autoprefix');
-var autoprefix= new LessPluginAutoPrefix({ browsers: ["last 2 versions"] });
-
 var startDevServer = require('./server').start;
 var build = require('./server').build;
-var buildDest = require('./server.config.json').buildFolder;
-
+//var buildDest = require('./server.config.json').buildFolder;
+var buildDest = require('./server').buildPathDestination;
+var deployDest = require('./server').deployPathDestination;
 var name = path.basename(__dirname);
 var templateFile = './src/Template.qextmpl';
 var lessFiles = './src/**/*.less';
 var cssFiles = './src/**/*.css';
 
 gulp.task('build', function(callback){
-  build(function(err, stats){
-    if(err) {
-      return callback(err);
-    }
-    callback();
-  });
+    build(function(err, stats){
+        if(err) {
+          return callback(err);
+        }
+        callback();
+    });
 });
 
 gulp.task('devServer', function(callback){
-  startDevServer(function(err, server){
-    if(err) {
-      return callback(err);
-    }
-    callback();
-  });
+    startDevServer(function(err, server){
+        if(err) {
+          return callback(err);
+        }
+        callback();
+    });
 });
 
 gulp.task('qext', function () {
@@ -49,9 +50,10 @@ gulp.task('less2css', function(){
   return gulp.src(lessFiles)
   .pipe(less({
     plugins: [autoprefix]
-  }))
+   }))
   .pipe(minifyCSS({keepSpecialComments : 0}))
-  .pipe(gulp.dest(buildDest));
+  .pipe(gulp.dest(buildDest))
+  .pipe(gulp.dest(deployDest));
 });
 
 gulp.task('css', function(){
@@ -77,11 +79,16 @@ gulp.task('zip-build', function(){
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('development', ['qext', 'less2css', 'css', 'watch', 'devServer']);
+gulp.task('deploy', function(){
+  return gulp.src(buildDest + "/**/*").pipe(gulp.dest(deployDest));
+});
+
+gulp.task('development', ['qext', 'less2css', /*'css',*/ 'watch', 'devServer']);
 gulp.task('production', function(callback) {
-  runSequence(['qext', 'less2css', 'css', 'remove-build-zip'],
+  runSequence(['qext', 'less2css', /*'css',*/ 'remove-build-zip'],
     'build',
-    'zip-build'
+    'zip-build',
+    'deploy'
     );
 });
 

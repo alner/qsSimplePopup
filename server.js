@@ -9,7 +9,10 @@ var contentUrl = serverConfig.url;
 var compiler = webpack(config);
 var originalOutputFileSystem = compiler.outputFileSystem;
 
-
+module.exports.buildPathDestination =
+  process.env.npm_lifecycle_event === 'build' ?
+  serverConfig.buildFolder : serverConfig.deployFolder;
+module.exports.deployPathDestination = serverConfig.deployFolder;
 module.exports.start = function start(callback) {
   var devServer = new WebpackDevServer(compiler, {
     contentBase: contentUrl,
@@ -21,7 +24,7 @@ module.exports.start = function start(callback) {
   })
   .listen(devServerPort, 'localhost', function (err, result) {
     // WebpackDevServer uses in-memory compilation
-    // (!) Restore original output to file system
+    // (!) Restore original output file system
     compiler.outputFileSystem  = originalOutputFileSystem;
 
     if (err) {
@@ -29,7 +32,7 @@ module.exports.start = function start(callback) {
       return callback(err);
     }
 
-    console.log('Listening to localhost:' + devServerPort);
+    console.log('Listening at localhost:' + devServerPort);
 
     callback(null, devServer);
   });

@@ -1,12 +1,34 @@
+import loadCSS from './loadcss';
 import initialProperties from './initialProperties';
 import definition from './definition';
 import paint from './paint';
 
-const define = (window && window.define) || define;
+const global = window;
+const defined = window.requirejs.defined;
+const define = global.define || define;
 
-define(['css!./styles.css'],
-  function(){
-    //var paint = require('./paint');
+define('resource-not-defined', function(){
+  return null;
+});
+
+let dependencies = [
+  'module',
+  'qlik',
+].map(function(path){
+  // check if dependencies were defined...
+  if(defined(path) || path === 'module')
+    return path
+  else
+  if(path === 'qlik' && defined('js/qlik'))
+    return 'js/qlik'
+  else return 'resource-not-defined'
+});
+
+define(dependencies,
+  function(module, Qlik){
+    const ROOT_URI = module.uri.split('/').slice(0, -1).join('/')
+      || '/extensions/qsSimplePopup';
+    loadCSS(`${ROOT_URI}/styles.css`);
     console.log('component');
 
     return {
