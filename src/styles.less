@@ -1,9 +1,98 @@
 .qv-simplepopup {
   // your styles should be here
-  button {
-    width: 100%;
-    height: auto;
-    border: none !important;
-    box-shadow: none !important;
-  }
+
+
+}
+.qv-sp-tbutton {
+  width: auto;//100%;
+  height: auto;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.qv-sp-closebutton {
+  float: right;
+  width: 24px;
+  height: auto;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.qv-spopup-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+}
+
+.qv-spopup {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  //background-color: white;//#F2F2F2;
+  color: #595959;
+  box-shadow: 0 5px 10px 0 rgba(128, 128, 128, 0.4);
+  font-family: 'QlikView Sans', sans-serif;
+  z-index: 10;
+  border-radius: 5px;
+  background-clip: padding-box;
+  padding: 10px 5px 5px 5px;
+  cursor: default;
+  overflow: auto;
+}
+
+.qv-spopup-modal {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background-clip: padding-box;
+  background-color: #404040;
+  padding-top: 10px;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-bottom: 10px;
+}
+
+.qv-spopup-content {
+  flex: 1 auto;
+  overflow: auto;
+  display: block;
+  min-height: 70px;
+  height: ~"calc(100% - 60px)";
+  background-color: #FFFFFF;
+  color: #595959;
+  margin: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  z-index: 11;
+}
+
+.qv-spopup-header {
+
+}
+
+.qv-spopup-footer {
+  flex: 0 auto;
+  display: block;
+  padding-bottom: 10px;
+  margin: 10px;
+  margin-bottom: 0;
+  text-align: right;
+  min-height: 28px;
 }

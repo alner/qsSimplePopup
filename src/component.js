@@ -1,7 +1,7 @@
 import loadCSS from './loadcss';
 import initialProperties from './initialProperties';
 import definition from './definition';
-import paint from './paint';
+import setupPaint from './paint';
 
 const global = window;
 const defined = window.requirejs.defined;
@@ -14,6 +14,7 @@ define('resource-not-defined', function(){
 let dependencies = [
   'module',
   'qlik',
+  'translator'
 ].map(function(path){
   // check if dependencies were defined...
   if(defined(path) || path === 'module')
@@ -25,11 +26,11 @@ let dependencies = [
 });
 
 define(dependencies,
-  function(module, Qlik){
+  function(module, Qlik, translator){
     const ROOT_URI = module.uri.split('/').slice(0, -1).join('/')
       || '/extensions/qsSimplePopup';
     loadCSS(`${ROOT_URI}/styles.css`);
-    console.log('component');
+    const { paint } = setupPaint({ translator });
 
     return {
       initialProperties,

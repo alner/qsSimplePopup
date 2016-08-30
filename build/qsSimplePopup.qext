@@ -2,7 +2,7 @@
   "name" : "Simple Popup",
   "description" : "Simple Popup component",
   "preview": "preview.png",
-  "icon" : "table",
+  "icon" : "extension",
   "type" : "visualization",
   "version": "0.1",
   "preview" : "bar",
