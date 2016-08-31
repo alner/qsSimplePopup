@@ -30,12 +30,13 @@ define(dependencies,
     const ROOT_URI = module.uri.split('/').slice(0, -1).join('/')
       || '/extensions/qsSimplePopup';
     loadCSS(`${ROOT_URI}/styles.css`);
-    const { paint } = setupPaint({ translator });
+    const { paint, destroy } = setupPaint({ translator });
 
     return {
       initialProperties,
       definition,
-      paint
+      paint,
+      destroy
     }
   }
 );

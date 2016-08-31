@@ -25,8 +25,7 @@ function PopupFooter(props) {
   )
 }
 
-export function createPopupService({ translator }) {
-  let translatorService = translator;
+export function createPopupService({ LabelOK }) {
   let popupNode;
 
   function showAsPopup(component,
@@ -44,7 +43,7 @@ export function createPopupService({ translator }) {
       popupNode.ontouchstart = popupNode.onclick;
       document.body.appendChild(popupNode);
     }
-    const closeLabel = translator.get('Common.OK') || 'OK';
+    const closeLabel = LabelOK || 'OK';
     render(
     <div className="qv-spopup qv-spopup-modal" style={{width, height}}>
       <div className="qv-spopup-content">

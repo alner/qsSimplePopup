@@ -3,31 +3,108 @@ import markdown from 'marked';
 import { createPopupService } from './popupService';
 
 let popupService;
+const redrededItemsMeta = {};
 
 export default function setupPaint({ translator }) {
-  popupService = createPopupService({ translator });
+  popupService = createPopupService({ LabelOK: translator.get('Common.Close') });
   markdown.setOptions({
     breaks: true,
     sanitize: false
   });
-  let previousRenderAt;
-
   return {
     // Paint method
     paint($element, layout) {
       if(layout.options) {
-        const element = $(layout.options.buttonPlaceSelector)[0] || ($element)[0];
-        console.log(layout.options.renderAsLastChild);
+        /*
+        const element = getElementFor(layout.options.buttonPlaceSelector, $element);
         const renderAt = layout.options.renderAsLastChild ? element.lastChild : element.firstChild;
-        //if(previousRenderAt && previousRenderAt != renderAt) {
-          // remove previous node
-          //$(previousRenderAt).find('.qv-simplepopup').remove();
-        //}
-        render(<PopupButton {...layout.options} textToRender={markdown(layout.options.text)} />, element, renderAt); // element.lastChild
-        previousRenderAt = renderAt;
+        if(this.previousElement &&
+          (this.previousRenderAs != layout.options.renderAsLastChild
+          || this.previousElement != element)) {
+          // remove previous one
+          $(this.previousElement).children(`#${layout.qInfo.qId}`).remove();
+        }
+        render(<PopupButton id={layout.qInfo.qId} {...layout.options} textToRender={markdown(layout.options.text)} />, element, renderAt); // element.lastChild
+        this.previousRenderAs = layout.options.renderAsLastChild;
+        this.previousElement = element;
+        */
+        renderItems($element, layout, this.inEditState());
+      }
+    },
+
+    destroy($element, layout) {
+      //const element = getElementFor(layout.options.buttonPlaceSelector, $element);
+      //$(element).children(`#${layout.qInfo.qId}`).remove();
+      destroyItems($element, layout);
+    }
+  }
+}
+
+function getElementFor(elementSelector, $element) {
+  return (elementSelector && $(elementSelector)[0]) || ($element)[0];
+}
+
+function renderItems($element, layout, editState = false) {
+  let renderedItems = {};
+  layout.listItems && layout.listItems.forEach(item => {
+    const id = `${layout.qInfo.qId}--${item.cId}`;
+    const element = getElementFor(item.buttonPlaceSelector, $element);
+    const metaInfo = redrededItemsMeta[id];
+
+    if(metaInfo) {
+      // remove previous one if need it
+      if(metaInfo.element &&
+        (metaInfo.renderAsLastChild != item.renderAsLastChild
+        || metaInfo.element != element)) {
+        // remove previous one
+        let children = $(metaInfo.element).children(`#${id}`);
+        if(children)
+          children.remove();
+      }
+    }
+
+    const renderAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
+
+    render(<PopupButton id={id} {...item}
+      textToRender={markdown(item.text)} />, element, renderAt);
+
+    redrededItemsMeta[id] = {
+        element,
+        renderAsLastChild: item.renderAsLastChild
+    }
+
+    //if(editState)
+    renderedItems[id] = true;
+  });
+
+  // Remove deleted items if any...
+  if(editState) {
+    for(let key in redrededItemsMeta) {
+      if(!renderedItems[key]) {
+        // delete item
+        const metaInfo = redrededItemsMeta[key];
+        let children = $(metaInfo.element).children(`#${key}`);
+        if(children)
+          children.remove();
       }
     }
   }
+}
+
+function destroyItems($element, layout) {
+  layout.listItems && layout.listItems.forEach(item => {
+    const id = `${layout.qInfo.qId}--${item.cId}`;
+    const element = getElementFor(item.buttonPlaceSelector, $element);
+    const metaInfo = redrededItemsMeta[id];
+
+    if(metaInfo) {
+      let children = $(metaInfo.element).children(`#${id}`);
+      if(children)
+        children.remove();
+
+      delete redrededItemsMeta[id];
+    }
+  });
 }
 
 class PopupButton extends Component {
@@ -41,9 +118,11 @@ class PopupButton extends Component {
   render(){
     const icon = this.props.icon || "";
     const label = this.props.label || "";
+    const id = this.props.id;
+    const fillcellClass = this.props.fillCell ? 'qv-sp-fillcell' : '';
     return (
-      <div className="qv-simplepopup">
-        <button className={'lui-button qui-button qv-sp-tbutton'}
+      <div id={id} className={`qv-simplepopup ${fillcellClass}`}>
+        <button className={`lui-button qui-button qv-sp-tbutton ${fillcellClass}`}
           onClick={this.onClickHandler}
           onTouchStart={this.onClickHandler}
           onMouseOver={this.onMouseOver}
