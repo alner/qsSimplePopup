@@ -5,7 +5,7 @@ import { createPopupService } from './popupService';
 let popupService;
 const redrededItemsMeta = {};
 
-export default function setupPaint({ translator }) {
+export default function setupPaint({ Qlik, translator }) {
   popupService = createPopupService({ LabelOK: translator.get('Common.Close') });
   markdown.setOptions({
     breaks: true,
@@ -14,7 +14,21 @@ export default function setupPaint({ translator }) {
   return {
     // Paint method
     paint($element, layout) {
-      if(layout.options) {
+      /*
+      let visualizations = [];
+      Qlik.currApp().getObject(sheetInfo.sheetId).then(function(model){
+        model.layout.cells.forEach((cell) => {
+          Qlik.currApp().getObject(cell.name).then(function(data){
+            //console.log(data);
+            visualizations.push(data);
+          });
+        });
+        //console.log(model.layout.cells); console.log(model);
+      });
+      */
+
+
+      //if(layout.options) {
         /*
         const element = getElementFor(layout.options.buttonPlaceSelector, $element);
         const renderAt = layout.options.renderAsLastChild ? element.lastChild : element.firstChild;
@@ -29,7 +43,7 @@ export default function setupPaint({ translator }) {
         this.previousElement = element;
         */
         renderItems($element, layout, this.inEditState());
-      }
+      //}
     },
 
     destroy($element, layout) {

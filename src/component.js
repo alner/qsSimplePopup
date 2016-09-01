@@ -1,6 +1,6 @@
 import loadCSS from './loadcss';
 import initialProperties from './initialProperties';
-import definition from './definition';
+import setupDefinition from './definition';
 import setupPaint from './paint';
 
 const global = window;
@@ -30,7 +30,13 @@ define(dependencies,
     const ROOT_URI = module.uri.split('/').slice(0, -1).join('/')
       || '/extensions/qsSimplePopup';
     loadCSS(`${ROOT_URI}/styles.css`);
-    const { paint, destroy } = setupPaint({ translator });
+    const definition = setupDefinition({
+      getCurrentSheetObjects() {
+          const sheetInfo = Qlik.navigation.getCurrentSheetId();
+          return Qlik.currApp().getFullPropertyTree(sheetInfo.sheetId);
+        }
+    });
+    const { paint, destroy } = setupPaint({ Qlik, translator });
 
     return {
       initialProperties,
