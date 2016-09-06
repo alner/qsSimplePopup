@@ -7,43 +7,20 @@ const redrededItemsMeta = {};
 
 export default function setupPaint({ Qlik, translator }) {
   popupService = createPopupService({ LabelOK: translator.get('Common.Close') });
+  let renderer = new markdown.Renderer();
+  renderer.br = function(){
+    return '<br/><br/>'
+  }
   markdown.setOptions({
-    breaks: true,
-    sanitize: false
+    gfm: false,
+    breaks: false,
+    sanitize: false,
+    renderer
   });
   return {
     // Paint method
     paint($element, layout) {
-      /*
-      let visualizations = [];
-      Qlik.currApp().getObject(sheetInfo.sheetId).then(function(model){
-        model.layout.cells.forEach((cell) => {
-          Qlik.currApp().getObject(cell.name).then(function(data){
-            //console.log(data);
-            visualizations.push(data);
-          });
-        });
-        //console.log(model.layout.cells); console.log(model);
-      });
-      */
-
-
-      //if(layout.options) {
-        /*
-        const element = getElementFor(layout.options.buttonPlaceSelector, $element);
-        const renderAt = layout.options.renderAsLastChild ? element.lastChild : element.firstChild;
-        if(this.previousElement &&
-          (this.previousRenderAs != layout.options.renderAsLastChild
-          || this.previousElement != element)) {
-          // remove previous one
-          $(this.previousElement).children(`#${layout.qInfo.qId}`).remove();
-        }
-        render(<PopupButton id={layout.qInfo.qId} {...layout.options} textToRender={markdown(layout.options.text)} />, element, renderAt); // element.lastChild
-        this.previousRenderAs = layout.options.renderAsLastChild;
-        this.previousElement = element;
-        */
-        renderItems($element, layout, this.inEditState());
-      //}
+      renderItems($element, layout, this.inEditState());
     },
 
     destroy($element, layout) {
@@ -78,9 +55,8 @@ function renderItems($element, layout, editState = false) {
     }
 
     const renderAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
-
     render(<PopupButton id={id} {...item}
-      textToRender={markdown(item.text)} />, element, renderAt);
+      textToRender={markdown(item.text)} />, element, renderAt); // markdown(item.text)
 
     redrededItemsMeta[id] = {
         element,
