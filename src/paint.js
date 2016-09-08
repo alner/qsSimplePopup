@@ -56,7 +56,7 @@ function renderItems($element, layout, app, editState = false) {
     }
 
     const renderAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
-    const text = item.text.replace('$appid', app.id);
+    const text = item.text.replace(/\$appid/gi, app.id);
     render(<PopupButton id={id} {...item}
       textToRender={markdown(text)} />, element, renderAt); // markdown(item.text)
 
