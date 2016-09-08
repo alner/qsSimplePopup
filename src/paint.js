@@ -6,6 +6,7 @@ let popupService;
 const redrededItemsMeta = {};
 
 export default function setupPaint({ Qlik, translator }) {
+  let app = Qlik.currApp();
   popupService = createPopupService({ LabelOK: translator.get('Common.Close') });
   let renderer = new markdown.Renderer();
   renderer.br = function(){
@@ -20,7 +21,7 @@ export default function setupPaint({ Qlik, translator }) {
   return {
     // Paint method
     paint($element, layout) {
-      renderItems($element, layout, this.inEditState());
+      renderItems($element, layout, app, this.inEditState());
     },
 
     destroy($element, layout) {
@@ -35,7 +36,7 @@ function getElementFor(elementSelector, $element) {
   return (elementSelector && $(elementSelector)[0]) || ($element)[0];
 }
 
-function renderItems($element, layout, editState = false) {
+function renderItems($element, layout, app, editState = false) {
   let renderedItems = {};
   layout.listItems && layout.listItems.forEach(item => {
     const id = `${layout.qInfo.qId}--${item.cId}`;
@@ -55,8 +56,9 @@ function renderItems($element, layout, editState = false) {
     }
 
     const renderAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
+    const text = item.text.replace('$appid', app.id);
     render(<PopupButton id={id} {...item}
-      textToRender={markdown(item.text)} />, element, renderAt); // markdown(item.text)
+      textToRender={markdown(text)} />, element, renderAt); // markdown(item.text)
 
     redrededItemsMeta[id] = {
         element,
