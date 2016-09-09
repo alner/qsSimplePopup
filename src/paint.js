@@ -40,7 +40,7 @@ function renderItems($element, layout, app, editState = false) {
   let renderedItems = {};
   layout.listItems && layout.listItems.forEach(item => {
     const id = `${layout.qInfo.qId}--${item.cId}`;
-    const element = getElementFor(item.buttonPlaceSelector, $element);
+    let element = getElementFor(item.buttonPlaceSelector, $element);
     const metaInfo = redrededItemsMeta[id];
 
     if(metaInfo) {
@@ -55,14 +55,27 @@ function renderItems($element, layout, app, editState = false) {
       }
     }
 
-    const renderAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
-    const text = item.text.replace(/\$appid/gi, app.id);
-    render(<PopupButton id={id} {...item}
-      textToRender={markdown(text)} />, element, renderAt); // markdown(item.text)
+    const insertAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
+    //const renderAt = item.renderAsLastChild ? $(element.lastChild : element.firstChild;
+    const placeholder = `<div id="${id}"> </div>`;
+    let renderAt$ = $(element).find(`#${id}`);
+    if(!renderAt$.length) {
+      renderAt$ = item.renderAsLastChild ?
+      $(placeholder).insertAfter(insertAt) :
+      $(placeholder).insertBefore(insertAt);
+    }
 
-    redrededItemsMeta[id] = {
-        element,
-        renderAsLastChild: item.renderAsLastChild
+    const placeElement = renderAt$[0];
+    // id={id}
+    if(placeElement) {
+      const text = item.text.replace(/\$appid/gi, app.id);
+      render(<PopupButton {...item}
+        textToRender={markdown(text)} />, placeElement, placeElement.firstChild); // markdown(item.text)
+
+      redrededItemsMeta[id] = {
+          element,
+          renderAsLastChild: item.renderAsLastChild
+      }
     }
 
     //if(editState)
