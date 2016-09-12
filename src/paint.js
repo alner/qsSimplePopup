@@ -13,9 +13,10 @@ export default function setupPaint({ Qlik, translator }) {
     return '<br/><br/>'
   }
   markdown.setOptions({
-    gfm: false,
+    gfm: true,
     breaks: false,
     sanitize: false,
+    tables: true,
     renderer
   });
   return {
@@ -56,7 +57,6 @@ function renderItems($element, layout, app, editState = false) {
     }
 
     const insertAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
-    //const renderAt = item.renderAsLastChild ? $(element.lastChild : element.firstChild;
     const placeholder = `<div id="${id}"> </div>`;
     let renderAt$ = $(element).find(`#${id}`);
     if(!renderAt$.length) {
