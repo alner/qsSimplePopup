@@ -23,6 +23,11 @@ export default function setupPaint({ Qlik, translator }) {
     // Paint method
     paint($element, layout) {
       renderItems($element, layout, app, this.inEditState());
+
+      // Remove zoom-in button:
+      const $parent = $element.parents('.qv-object-qsSimplePopup');
+      const $zoomIn = $parent && $parent.find('[tid=nav-menu-zoom-in]');
+      if($zoomIn) $zoomIn.remove();
     },
 
     destroy($element, layout) {
