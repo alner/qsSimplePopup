@@ -42,7 +42,7 @@ export default function setupDefinition({getCurrentSheetObjects }) {
                translation: "Common.Description",
                type: "string",
                expression: "optional",
-               defaultValue: "See [Markdown-Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)"
+               defaultValue: "See [Markdown-Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). To embed Qlik Sense objects: $objectid{styles}."
              },
              dialogWidth: {
                 ref: "dialogWidth",

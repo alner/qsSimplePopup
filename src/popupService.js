@@ -28,7 +28,7 @@ function PopupFooter(props) {
 export function createPopupService({ LabelOK }) {
   let popupNode;
 
-  function showAsPopup(component,
+  function showAsPopup(component, OnRender,
     { width, height } = {width: '85%', height: '85%'}) {
     if(!popupNode) {
       popupNode = document.createElement('div');
@@ -53,6 +53,8 @@ export function createPopupService({ LabelOK }) {
       <PopupFooter {...{ closeLabel }} onClose={removePopupIfExists} />
     </div>,
     popupNode, popupNode.lastChild);
+
+    OnRender && OnRender();
   }
 
   function removePopupIfExists() {

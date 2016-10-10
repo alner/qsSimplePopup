@@ -1,6 +1,6 @@
 {
   "name": "qsSimplePopup",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "description": "Simple Popup for Qlik Sense",
   "keywords": "qliksense extension",
   "main": "component.js",

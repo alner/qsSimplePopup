@@ -75,6 +75,7 @@ function renderItems($element, layout, app, editState = false) {
     if(placeElement) {
       const text = item.text.replace(/\$appid/gi, app.id);
       render(<PopupButton {...item}
+        QlikApp={app}
         textToRender={markdown(text)} />, placeElement, placeElement.firstChild); // markdown(item.text)
 
       redrededItemsMeta[id] = {
@@ -171,10 +172,27 @@ class PopupButton extends Component {
   }
 
   showPopup(){
+    const QlikApp = this.props.QlikApp;
+    let textToRender = this.props.textToRender;
+    const r = /\$(\w+)(\{([.|\s\S]+?)\})?/gm;
+    const objectsToRender = [];
+    let res;
+    while(res = r.exec(textToRender)) {
+      if(res.length > 3) {
+        const objId = res[1];
+        textToRender = textToRender.replace(res[0], `<div id="$sp_${objId}" style="${res[3]}"></div>`);
+        objectsToRender.push(objId);
+      }
+    }
     popupService.showAsPopup(
-      <p dangerouslySetInnerHTML={{__html: this.props.textToRender}}>
-      </p>, {
-      width: this.props.dialogWidth, height: this.props.dialogHeight
-    });
+      <p dangerouslySetInnerHTML={{__html: textToRender}}>
+      </p>,
+      function () {
+        QlikApp.visualization && objectsToRender.forEach(item => {
+          QlikApp.visualization.get(item).then(vis => vis.show(`$sp_${item}`));
+        })
+      },
+      { width: this.props.dialogWidth, height: this.props.dialogHeight}
+    );
   }
 }
