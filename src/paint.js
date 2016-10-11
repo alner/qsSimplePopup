@@ -174,7 +174,7 @@ class PopupButton extends Component {
   showPopup(){
     const QlikApp = this.props.QlikApp;
     let textToRender = this.props.textToRender;
-    const r = /\$(\w+)(\{([.|\s\S]+?)\})?/gm;
+    const r = /\$([A-Za-z0-9_-]+)(\{([.|\s\S]+?)\})?/gm;
     const objectsToRender = [];
     let res;
     while(res = r.exec(textToRender)) {
