@@ -33,14 +33,16 @@ export function createPopupService({ LabelOK }) {
     if(!popupNode) {
       popupNode = document.createElement('div');
       popupNode.className = 'qv-spopup-container';
-      popupNode.onclick = function(e) {
-        if(e.target == popupNode) {
-          e.preventDefault();
-          e.stopPropagation();
-          removePopupIfExists();
-        }
-      };
-      popupNode.ontouchstart = popupNode.onclick;
+      setTimeout(() => {
+        popupNode.onclick = function(e) {
+          if(e.target == popupNode) {
+            e.preventDefault();
+            e.stopPropagation();
+            removePopupIfExists();
+          }
+        };
+        popupNode.ontouchstart = popupNode.onclick;
+      }, 500);
       document.body.appendChild(popupNode);
     }
     const closeLabel = LabelOK || 'OK';
