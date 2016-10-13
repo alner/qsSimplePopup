@@ -42,6 +42,10 @@ define(dependencies,
       initialProperties,
       definition,
       paint,
+      support : {
+        export: false,
+        exportData: false
+      },
       destroy
     }
   }

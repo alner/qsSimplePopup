@@ -25,9 +25,9 @@ export default function setupPaint({ Qlik, translator }) {
       renderItems($element, layout, app, this.inEditState());
 
       // Remove zoom-in button:
-      const $parent = $element.parents('.qv-object-qsSimplePopup');
-      const $zoomIn = $parent && $parent.find('[tid=nav-menu-zoom-in]');
-      if($zoomIn) $zoomIn.remove();
+      // const $parent = $element.parents('.qv-object-qsSimplePopup');
+      // const $zoomIn = $parent && $parent.find('[tid=nav-menu-zoom-in]');
+      // if($zoomIn) $zoomIn.remove();
     },
 
     destroy($element, layout) {
@@ -185,7 +185,7 @@ class PopupButton extends Component {
       }
     }
     popupService.showAsPopup(
-      <p dangerouslySetInnerHTML={{__html: textToRender}}>
+      <p className="content" dangerouslySetInnerHTML={{__html: textToRender}}>
       </p>,
       function () {
         QlikApp.visualization && objectsToRender.forEach(item => {
