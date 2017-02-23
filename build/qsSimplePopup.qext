@@ -2,9 +2,8 @@
   "name" : "Simple Popup",
   "description" : "Simple Popup component",
   "preview": "preview.png",
-  "icon" : "extension",
+  "icon" : "extensions",
   "type" : "visualization",
-  "version": "0.5",
-  "preview" : "bar",
+  "version": "0.6",
   "author": "Alexander Nerush"
 }

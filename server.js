@@ -17,8 +17,8 @@ module.exports.start = function start(callback) {
   var devServer = new WebpackDevServer(compiler, {
     contentBase: contentUrl,
     //hot: true,
-    //headers: { "Access-Control-Allow-Origin": "*" },
-    inline: true,
+    headers: { "Access-Control-Allow-Origin": "*" },
+    //inline: true,
     historyApiFallback: true,
     filename: config.output.filename
   })

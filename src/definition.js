@@ -69,8 +69,9 @@ export default function setupDefinition({getCurrentSheetObjects }) {
                    let objectId = objectParts && objectParts.length > 0 && objectParts[0];
                    return getCurrentSheetObjects().then(data => {
                          // [Sheet, Sheet objects]
-                         let value = `${data.id}|${data.properties.qMetaDef.title}|${data.properties.qInfo.qType}`;
-                         let label = `${data.properties.qMetaDef.title} : ${data.properties.qInfo.qType}`;
+                         const title = (data.properties.qMetaDef && data.properties.qMetaDef.title) || '';
+                         let value = `${data.id}|${title}|${data.properties.qInfo.qType}`;
+                         let label = `${title} : ${data.properties.qInfo.qType}`;
 
                          if(objectId === data.id) {
                              if(propertyData.objectDescription != label) {

@@ -1,5 +1,5 @@
 var webpack = require('webpack');
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+//var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var path = require('path');
 var serverConfig = require('./server.config.json');
 
@@ -54,9 +54,11 @@ if(process.env.NODE_ENV !== 'production') {
     //config.devtool = 'source-map';
   config.debug = true;
   config.output.path = path.resolve(serverConfig.deployFolder);
+  config.entry.js.unshift("webpack-dev-server/client?http://localhost:" + devServerPort);
   //config.entry.js.unshift("webpack/hot/dev-server");
   //config.entry.js.unshift("webpack-dev-server/client?http://localhost:" + devServerPort + "/");
   //config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  /*
   config.plugins.push(new BrowserSyncPlugin(
       // BrowserSync options
       {
@@ -83,6 +85,7 @@ if(process.env.NODE_ENV !== 'production') {
         reload: true
       }
     ));
+  */
 } else {
   console.log('PRODUCTION configuration');
   config.plugins.push(new webpack.DefinePlugin({
@@ -99,6 +102,7 @@ if(process.env.NODE_ENV !== 'production') {
       comments: false,
     },
   }));
+  config.plugins.push(new webpack.optimize.DedupePlugin());
   config.plugins.push(new webpack.optimize.OccurenceOrderPlugin());
   // config.plugins.push(new CopyWebpackPlugin([{
   //   from: 'build',

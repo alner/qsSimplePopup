@@ -19,6 +19,7 @@ var buildDest = require('./server').buildPathDestination;
 var deployDest = require('./server').deployPathDestination;
 var name = path.basename(__dirname);
 var templateFile = './src/Template.qextmpl';
+var iconFile = './src/icon.png';
 var lessFiles = './src/**/*.less';
 var cssFiles = './src/**/*.css';
 
