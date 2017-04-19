@@ -189,7 +189,8 @@ class PopupButton extends Component {
       </p>,
       function () {
         QlikApp.visualization && objectsToRender.forEach(item => {
-          QlikApp.visualization.get(item).then(vis => vis.show(`$sp_${item}`));
+          //QlikApp.visualization.get(item).then(vis => vis.show(`$sp_${item}`));
+          QlikApp.getObject(`$sp_${item}`, item);
         })
       },
       { width: this.props.dialogWidth, height: this.props.dialogHeight}
