@@ -39,7 +39,7 @@ export default function setupPaint({ Qlik, translator }) {
 }
 
 function getElementFor(elementSelector, $element) {
-  return (elementSelector && $(elementSelector)[0]) || ($element)[0];
+  return (elementSelector && elementSelector.length > 0 && $(elementSelector)[0]) || ($element)[0];
 }
 
 function renderItems($element, layout, app, editState = false) {
@@ -53,6 +53,7 @@ function renderItems($element, layout, app, editState = false) {
       // remove previous one if need it
       if(metaInfo.element &&
         (metaInfo.renderAsLastChild != item.renderAsLastChild
+        || metaInfo.fillCell != item.fillCell
         || metaInfo.element != element)) {
         // remove previous one
         let children = $(metaInfo.element).children(`#${id}`);
@@ -61,13 +62,15 @@ function renderItems($element, layout, app, editState = false) {
       }
     }
 
-    const insertAt = item.renderAsLastChild ? element.lastChild : element.firstChild;
-    const placeholder = `<div id="${id}"> </div>`;
+    const insertAt = (item.renderAsLastChild ? element.lastChild : element.firstChild);
+    const placeholder = item.fillCell ? `<div id="${id}" class="qv-sp-fillcell"> </div>` : `<div id="${id}"> </div>`;
     let renderAt$ = $(element).find(`#${id}`);
-    if(!renderAt$.length) {
+    if(insertAt && !renderAt$.length) {
       renderAt$ = item.renderAsLastChild ?
       $(placeholder).insertAfter(insertAt) :
       $(placeholder).insertBefore(insertAt);
+    } else if (!element.hasChildNodes()) {
+      renderAt$ = $(placeholder).appendTo(element);
     }
 
     const placeElement = renderAt$[0];
@@ -80,7 +83,8 @@ function renderItems($element, layout, app, editState = false) {
 
       redrededItemsMeta[id] = {
           element,
-          renderAsLastChild: item.renderAsLastChild
+          renderAsLastChild: item.renderAsLastChild,
+          fillCell: item.fillCell
       }
     }
 
