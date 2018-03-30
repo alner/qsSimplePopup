@@ -30,10 +30,20 @@ export default function setupPaint({ Qlik, translator }) {
       // if($zoomIn) $zoomIn.remove();
     },
 
-    destroy($element, layout) {
+    destroy(self, layout) {
       //const element = getElementFor(layout.options.buttonPlaceSelector, $element);
       //$(element).children(`#${layout.qInfo.qId}`).remove();
-      destroyItems($element, layout);
+      // Changes from Qlik Sense April 2018:
+      if(layout) {
+        // for old versions
+        const $element = self;
+        destroyItems($element, layout);
+      } else {
+        // from April 2018
+        const $element = self.$element;
+        const layout = self.backendApi.model.layout;
+        destroyItems($element, layout);
+      }
     }
   }
 }
