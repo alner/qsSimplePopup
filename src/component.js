@@ -17,7 +17,9 @@ let dependencies = [
   'translator'
 ].map(function(path){
   // check if dependencies were defined...
-  if(defined(path) || path === 'module')
+  if(defined(path) 
+  || path === 'module'
+  || path === 'translator')
     return path
   else
   if(path === 'qlik' && defined('js/qlik'))
