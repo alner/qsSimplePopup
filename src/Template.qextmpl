@@ -4,6 +4,6 @@
   "preview": "preview.png",
   "icon" : "extensions",
   "type" : "visualization",
-  "version": "0.95",
+  "version": "0.97",
   "author": "Alexander Nerush"
 }

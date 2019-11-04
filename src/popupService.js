@@ -29,7 +29,7 @@ export function createPopupService({ LabelOK }) {
   let popupNode;
 
   function showAsPopup(component, OnRender,
-    { width, height } = {width: '85%', height: '85%'}) {
+    { width, height, onClosePopup } = {width: '85%', height: '85%', onClosePopup: nil}) {
     if(!popupNode) {
       popupNode = document.createElement('div');
       popupNode.className = 'qv-spopup-container';
@@ -39,6 +39,7 @@ export function createPopupService({ LabelOK }) {
             e.preventDefault();
             e.stopPropagation();
             removePopupIfExists();
+            if(onClosePopup) onClosePopup();
           }
         };
         popupNode.ontouchstart = popupNode.onclick;
@@ -52,7 +53,10 @@ export function createPopupService({ LabelOK }) {
       {/*<PopupHeader onClose={removePopupIfExists} />*/}
       {component}
       </div>
-      <PopupFooter {...{ closeLabel }} onClose={removePopupIfExists} />
+      <PopupFooter {...{ closeLabel }} onClose={() => {
+        removePopupIfExists();
+        if(onClosePopup) onClosePopup();
+      }} />
     </div>,
     popupNode, popupNode.lastChild);
 

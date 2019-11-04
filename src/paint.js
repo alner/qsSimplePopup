@@ -30,6 +30,13 @@ export default function setupPaint({ Qlik, translator }) {
       // if($zoomIn) $zoomIn.remove();
     },
 
+    beforeDestroy() {
+      const $element = this.$element;
+      const layout = this.backendApi.model.layout;
+      destroyItems($element, layout);
+    },
+
+    /*
     destroy(self, layout) {
       //const element = getElementFor(layout.options.buttonPlaceSelector, $element);
       //$(element).children(`#${layout.qInfo.qId}`).remove();
@@ -45,6 +52,7 @@ export default function setupPaint({ Qlik, translator }) {
         destroyItems($element, layout);
       }
     }
+    */
   }
 }
 
@@ -86,16 +94,19 @@ function renderItems($element, layout, app, editState = false) {
     const placeElement = renderAt$[0];
     // id={id}
     if(placeElement) {
+
+      redrededItemsMeta[id] = {
+        element,
+        renderAsLastChild: item.renderAsLastChild,
+        fillCell: item.fillCell,
+        removeEmbeddedObjects: null
+      }
+
       const text = item.text.replace(/\$appid/gi, app.id);
       render(<PopupButton {...item}
         QlikApp={app}
+        onObjectsEmbedded={removeFunc => redrededItemsMeta[id].removeEmbeddedObjects = removeFunc }
         textToRender={markdown(text)} />, placeElement, placeElement.firstChild); // markdown(item.text)
-
-      redrededItemsMeta[id] = {
-          element,
-          renderAsLastChild: item.renderAsLastChild,
-          fillCell: item.fillCell
-      }
     }
 
     //if(editState)
@@ -123,6 +134,8 @@ function destroyItems($element, layout) {
     const metaInfo = redrededItemsMeta[id];
 
     if(metaInfo) {
+      metaInfo.removeEmbeddedObjects && metaInfo.removeEmbeddedObjects();
+
       let children = $(metaInfo.element).children(`#${id}`);
       if(children)
         children.remove();
@@ -135,9 +148,11 @@ function destroyItems($element, layout) {
 class PopupButton extends Component {
   constructor(props) {
     super(props);
+    this.renderedObjects = null;
     this.onClickHandler = this.onClickHandler.bind(this);
     this.onMouseOver = this.onMouseOver.bind(this);
     this.omMouseOut = this.omMouseOut.bind(this);
+    this.removeEmbeddedObjects = this.removeEmbeddedObjects.bind(this);
   }
 
   render(){
@@ -185,11 +200,23 @@ class PopupButton extends Component {
     }
   }
 
+  removeEmbeddedObjects() {
+    this.renderedObjects && this.renderedObjects.forEach(o => {
+      o.close();
+    });
+
+    this.renderedObjects = null;
+  }
+
   showPopup(){
     const QlikApp = this.props.QlikApp;
+    const onObjectsEmbedded = this.props.onObjectsEmbedded;
     let textToRender = this.props.textToRender;
     const r = /\$([A-Za-z0-9_-]+)(\{([.|\s\S]+?)\})?/gm;
     const objectsToRender = [];
+    const removeEmbeddedObjects = this.removeEmbeddedObjects;
+    this.renderedObjects = [];
+    const renderedObjects = this.renderedObjects;
     let res;
     while(res = r.exec(textToRender)) {
       if(res.length > 3) {
@@ -203,11 +230,21 @@ class PopupButton extends Component {
       </p>,
       function () {
         QlikApp.visualization && objectsToRender.forEach(item => {
-          //QlikApp.visualization.get(item).then(vis => vis.show(`$sp_${item}`));
-          QlikApp.getObject(`$sp_${item}`, item);
-        })
+          QlikApp.visualization.get(item).then(vis => {
+            vis.show(`$sp_${item}`);
+            renderedObjects.push(vis);
+          });
+          //QlikApp.getObject(`$sp_${item}`, item);
+        });
+        onObjectsEmbedded && onObjectsEmbedded(removeEmbeddedObjects);
       },
-      { width: this.props.dialogWidth, height: this.props.dialogHeight}
+      { 
+        onClosePopup: () => {
+          removeEmbeddedObjects();
+        },
+        width: this.props.dialogWidth, 
+        height: this.props.dialogHeight,
+      }
     );
   }
 }

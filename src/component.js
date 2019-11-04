@@ -38,7 +38,7 @@ define(dependencies,
           return Qlik.currApp().getFullPropertyTree(sheetInfo.sheetId);
         }
     });
-    const { paint, destroy } = setupPaint({ Qlik, translator });
+    const { paint, beforeDestroy } = setupPaint({ Qlik, translator });
 
     return {
       initialProperties,
@@ -48,7 +48,7 @@ define(dependencies,
         export: false,
         exportData: false
       },
-      destroy
+      beforeDestroy,
     }
   }
 );
