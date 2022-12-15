@@ -2,14 +2,17 @@
   "name": "qsSimplePopup",
   "version": "0.9.0",
   "description": "Simple Popup for Qlik Sense",
-  "keywords": "qliksense extension",
+  "keywords": ["qliksense", "extension"],
   "main": "component.js",
   "private": true,
   "homepage": "https://github.com/alner/qsSimplePopup",
   "bugs": "https://github.com/alner/qsSimplePopup/issues",
   "scripts": {
-    "build": "set NODE_ENV=production&& gulp production",
-    "dev": "set NODE_ENV=development&& gulp development"
+    "build": "NODE_ENV=production gulp production",
+    "dev": "NODE_ENV=development gulp development"
+  },
+  "engines": {
+    "node": "~8.11.3"
   },
   "author": "Alexander Nerush <ale.nerush@gmail.com>",
   "license": "MIT",

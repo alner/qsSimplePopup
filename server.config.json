@@ -2,6 +2,6 @@
   "devServerHost": "http://localhost",
 	"devServerPort": "8080",
   "buildFolder": "build",
-  "deployFolder": "C:/Users/nerush/Documents/Qlik/Sense/Extensions/qsSimplePopup",
+  "deployFolder": "build",
   "url": "http://localhost:4848/sense/app/C%3A%5CUsers%5Cnerush%5CDocuments%5CQlik%5CSense%5CApps%5C_AListTest.qvf/sheet/mWtxFJ/state/analysis"
 }

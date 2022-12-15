@@ -61,6 +61,7 @@ function getElementFor(elementSelector, $element) {
 }
 
 function renderItems($element, layout, app, editState = false) {
+  console.log(layout);
   let renderedItems = {};
   layout.listItems && layout.listItems.forEach(item => {
     const id = `${layout.qInfo.qId}--${item.cId}`;
@@ -81,7 +82,7 @@ function renderItems($element, layout, app, editState = false) {
     }
 
     const insertAt = (item.renderAsLastChild ? element.lastChild : element.firstChild);
-    const placeholder = item.fillCell ? `<div id="${id}" class="qv-sp-fillcell"> </div>` : `<div id="${id}"> </div>`;
+    const placeholder = item.fillCell ? `<div id="${id}" class="qv-simple-popup-ph qv-sp-fillcell"> </div>` : `<div id="${id}" class="qv-simple-popup-ph"> </div>`;
     let renderAt$ = $(element).find(`#${id}`);
     if(insertAt && !renderAt$.length) {
       renderAt$ = item.renderAsLastChild ?
@@ -157,17 +158,19 @@ class PopupButton extends Component {
 
   render(){
     const icon = this.props.icon || "";
+    const iconColor = this.props.iconColor ? this.props.iconColor.color : "inherit";
     const label = this.props.label || "";
     const id = this.props.id;
     const fillcellClass = this.props.fillCell ? 'qv-sp-fillcell' : '';
     return (
       <div id={id} className={`qv-simplepopup ${fillcellClass}`}>
-        <button className={`lui-button qui-button qv-sp-tbutton ${fillcellClass}`}
+        <button 
+          className={`lui-button qui-button qv-sp-tbutton ${fillcellClass}`}
           onClick={this.onClickHandler}
           onTouchStart={this.onClickHandler}
           onMouseOver={this.onMouseOver}
           onMouseOut={this.omMouseOut}>
-          <span className={`lui-icon lui-icon--${icon}`}></span>
+          <span className={`lui-icon lui-icon--${icon}`} style={{color: iconColor}}></span>
           {label}
         </button>
       </div>

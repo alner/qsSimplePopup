@@ -1,4 +1,5 @@
 import icons from './luiIcons';
+import ver from './ver';
 
 export default function setupDefinition({getCurrentSheetObjects }) {
 
@@ -35,6 +36,18 @@ export default function setupDefinition({getCurrentSheetObjects }) {
                component: "dropdown",
                options: icons.map(icon => { return {value: icon, label: icon}}),
                defaultValue: "help"
+             },
+             iconColor : {
+              ref : "iconColor",
+              translation : "Icon color",
+              type : "object",
+              component : "color-picker",
+              // show: function(data) {
+              //   return !!data.color;
+              // },
+              defaultValue : {
+                color: "#808080",
+              }
              },
              text: {
                ref: "text",
@@ -172,7 +185,25 @@ export default function setupDefinition({getCurrentSheetObjects }) {
       },
       settings: {
         uses: "settings",
-      }
+      },
+      about: {
+        type: 'items',
+        label: 'About',
+        translation: 'Common.About',
+        items: {
+          versionInfo: {
+            label: () => `${ver.name} (${ver.build})`,
+            component: 'text',
+            style: 'sHeader',
+          },
+          helpLink: {
+            label: `Author: ${ver.author}`,
+            // translation: 'GlobalMenu.Help',
+            component: 'link',
+            url: ver.linkedProfile,
+          },
+        },
+      }      
     }
   };
 };
