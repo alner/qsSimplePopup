@@ -48,7 +48,7 @@ export default function setupDefinition({getCurrentSheetObjects }) {
               defaultValue : {
                 color: "#808080",
               }
-             },
+             },             
              text: {
                ref: "text",
                label: "Text",
@@ -178,6 +178,46 @@ export default function setupDefinition({getCurrentSheetObjects }) {
                ref: "fillCell",
                default: false
              },
+             iconVerticalAlignment: {
+              ref: "iconVerticalAlignment",
+              label: "Icon vertical alignment",
+              type: "string",
+              show: function(data){
+                return data.fillCell;
+              },
+              component: "dropdown",
+              options: [{
+                value: "start",
+                label: "Top"
+              }, {
+                value: "center",
+                label: "Center"
+              }, {
+                value: "end",
+                label: "Bottom"
+              }],
+              defaultValue: "start"
+             },
+             iconHorizAlignment: {
+              ref: "iconHorizontalAlignment",
+              label: "Icon horizontal alignment",
+              type: "string",
+              show: function(data){
+                return data.fillCell;
+              },              
+              component: "dropdown",
+              options: [{
+                value: "start",
+                label: "Left"
+              }, {
+                value: "center",
+                label: "Center"
+              }, {
+                value: "end",
+                label: "Right"
+              }],
+              defaultValue: "center"
+             },             
            }
           },
 

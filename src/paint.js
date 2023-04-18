@@ -162,10 +162,13 @@ class PopupButton extends Component {
     const label = this.props.label || "";
     const id = this.props.id;
     const fillcellClass = this.props.fillCell ? 'qv-sp-fillcell' : '';
+    const iconVerticalAlignment = this.props.iconVerticalAlignment || 'center';
+    const iconHorizAlignment = this.props.iconHorizontalAlignment || 'center';
     return (
       <div id={id} className={`qv-simplepopup ${fillcellClass}`}>
         <button 
           className={`lui-button qui-button qv-sp-tbutton ${fillcellClass}`}
+          style={{alignItems: iconVerticalAlignment, justifyContent: iconHorizAlignment }}
           onClick={this.onClickHandler}
           onTouchStart={this.onClickHandler}
           onMouseOver={this.onMouseOver}
