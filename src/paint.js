@@ -22,7 +22,10 @@ export default function setupPaint({ Qlik, translator }) {
   return {
     // Paint method
     paint($element, layout) {
-      renderItems($element, layout, app, this.inEditState());
+      if(layout.renderTimeout == 0)
+        renderItems($element, layout, app, this.inEditState());
+      else 
+        setTimeout(() => renderItems($element, layout, app, this.inEditState()), layout.renderTimeout);
 
       // Remove zoom-in button:
       // const $parent = $element.parents('.qv-object-qsSimplePopup');
@@ -131,7 +134,7 @@ function renderItems($element, layout, app, editState = false) {
 function destroyItems($element, layout) {
   layout.listItems && layout.listItems.forEach(item => {
     const id = `${layout.qInfo.qId}--${item.cId}`;
-    const element = getElementFor(item.buttonPlaceSelector, $element);
+    //const element = getElementFor(item.buttonPlaceSelector, $element);
     const metaInfo = redrededItemsMeta[id];
 
     if(metaInfo) {
@@ -227,7 +230,7 @@ class PopupButton extends Component {
     while(res = r.exec(textToRender)) {
       if(res.length > 3) {
         const objId = res[1];
-        textToRender = textToRender.replace(res[0], `<div id="$sp_${objId}" style="${res[3]}"></div>`);
+        textToRender = textToRender.replace(res[0], `<div id="sp_${objId}" style="${res[3]}"></div>`);
         objectsToRender.push(objId);
       }
     }
@@ -236,10 +239,15 @@ class PopupButton extends Component {
       </p>,
       function () {
         QlikApp.visualization && objectsToRender.forEach(item => {
-          QlikApp.visualization.get(item).then(vis => {
-            vis.show(`$sp_${item}`);
-            renderedObjects.push(vis);
-          });
+          if(item === 'CurrentSelections') {
+            QlikApp.getObject(`sp_${item}`, item).then(vis => {
+              renderedObjects.push(vis);
+            });
+          } else
+            QlikApp.visualization.get(item).then(vis => {
+              vis.show(`sp_${item}`);
+              renderedObjects.push(vis);
+            });
           //QlikApp.getObject(`$sp_${item}`, item);
         });
         onObjectsEmbedded && onObjectsEmbedded(removeEmbeddedObjects);

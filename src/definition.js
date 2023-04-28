@@ -220,7 +220,14 @@ export default function setupDefinition({getCurrentSheetObjects }) {
              },             
            }
           },
-
+					RenderTimeout: {
+						type: "integer",
+						label: "Render Timeout, ms",
+						ref: "renderTimeout",
+						defaultValue: 0,
+            min: 0,
+            max: 30000,
+					},
         }
       },
       settings: {

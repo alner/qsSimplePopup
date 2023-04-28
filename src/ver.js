@@ -1,7 +1,7 @@
 export default {
   productId: 'Simple Popup',
   name: 'Simple Popup May 2023',
-  build: 20230500,
+  build: 20230501,
   toString() {
     return `${this.name} (build. ${this.build})`;
   },
