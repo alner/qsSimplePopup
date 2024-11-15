@@ -15,13 +15,16 @@ function PopupHeader(props) {
 
 function PopupFooter(props) {
   return (
-    <footer className="qv-spopup-footer">
-      <button className="lui-button lui-button--inverse qui-button"
+    <header className="qv-spopup-footer">
+      <button className="lui-fade-button"
         autofocus="true"
-        onClick={props.onClose} onTouchStart={props.onClose} >
-        {props.closeLabel}
+        onClick={props.onClose} onTouchStart={props.onClose} 
+        style={{color: '#F2F2F2'}}
+      >
+        {/* {props.closeLabel} */}
+        <span className="lui-icon lui-icon--close" aria-hidden="true"></span>
       </button>
-    </footer>
+    </header>
   )
 }
 
@@ -49,14 +52,14 @@ export function createPopupService({ LabelOK }) {
     const closeLabel = LabelOK || 'OK';
     render(
     <div className="qv-spopup qv-spopup-modal" style={{width, height}}>
-      <div className="qv-spopup-content">
-      {/*<PopupHeader onClose={removePopupIfExists} />*/}
-      {component}
-      </div>
       <PopupFooter {...{ closeLabel }} onClose={() => {
         removePopupIfExists();
         if(onClosePopup) onClosePopup();
       }} />
+      <div className="qv-spopup-content">
+      {/*<PopupHeader onClose={removePopupIfExists} />*/}
+      {component}
+      </div>
     </div>,
     popupNode, popupNode.lastChild);
 
