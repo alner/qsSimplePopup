@@ -19,7 +19,7 @@
   "repository": "https://github.com/alner/qsSimplePopup",
   "dependencies": {
     "babel-runtime": "^5.8.20",
-    "marked": "^0.3.6",
+    "marked": "^4.0.10",
     "preact": "^5.7.0"
   },
   "devDependencies": {
